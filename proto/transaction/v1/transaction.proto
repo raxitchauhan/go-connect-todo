@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package transaction.v1;
+
+// The transaction object structure
+message Transaction {
+    string id = 1;
+    string uuid = 2;         // Transaction UUID
+    string account_id = 3;   // Account ID associated with the transaction
+    int64 amount = 4;        // Amount of the transaction
+    string created_at = 5; // Timestamp when transaction was created
+    bool is_credit = 6;      // Flag indicating if it's a credit or debit
+}
+
+// Request structure for /deposit
+message DepositRequest {
+    string account_id = 1;  // Account ID to deposit into
+    int64 amount = 2;       // Amount to deposit
+}
+
+// Response structure for /deposit
+message DepositResponse {
+    string uuid = 1;
+}
+
+// Request structure for /credit
+message CreditRequest {
+    string account_id = 1;  // Account ID to credit
+    int64 amount = 2;       // Amount to credit
+}
+
+// Response structure for /credit
+message CreditResponse {
+    string uuid = 1;
+}
+
+// Request structure for /transaction_history
+message TransactionHistoryRequest {
+    string account_id = 1;  // Account ID for transaction history
+    string from = 2;  // From timestamp
+    string to = 3;    // To timestamp
+}
+
+// Response structure for /transaction_history
+message TransactionHistoryResponse {
+    repeated Transaction transactions = 1;  // List of transactions for the account
+}
+
+// Request structure for /balance
+message BalanceRequest {
+    string account_id = 1;  // Account ID to check balance
+}
+
+// Response structure for /balance
+message BalanceResponse {
+    int64 balance = 1;      // Current balance of the account
+}
+
+// The API service definition
+service AccountService {
+    rpc Deposit (DepositRequest) returns (DepositResponse);
+    rpc Credit (CreditRequest) returns (CreditResponse);
+    rpc TransactionHistory (TransactionHistoryRequest) returns (TransactionHistoryResponse);
+    rpc Balance (BalanceRequest) returns (BalanceResponse);
+}
